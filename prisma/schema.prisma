@@ -11,3 +11,66 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum StartupStatus {
+  DRAFT
+  GENERATED
+}
+
+model User {
+  id       String  @id @default(cuid())
+  name     String
+  email    String  @unique
+  password String
+  imageUrl String?
+  role     Role    @default(USER)
+
+  startups Startup[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Startup {
+  id String @id @default(cuid())
+
+  // AI Generated
+  title String
+  slug  String @unique
+
+  // User Inputs
+  idea           String  @db.Text
+  industry       String
+  targetAudience String?
+  budget         Int?
+  country        String?
+
+  // AI Output
+  generatedContent Json
+
+  status StartupStatus @default(DRAFT)
+
+  isFavorite Boolean @default(false)
+
+  exportedAt DateTime?
+  deletedAt  DateTime?
+
+  // Relationship
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([slug])
+  @@index([status])
+  @@index([createdAt])
+}
