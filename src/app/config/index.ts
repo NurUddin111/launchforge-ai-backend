@@ -18,4 +18,5 @@ export default {
   bcryptSaltRounds: Number(process.env.BCRYPT_SALT_ROUNDS),
 
   clientUrl: process.env.CLIENT_URL!,
+  geminiApiKey: process.env.GEMINI_API_KEY as string,
 };
