@@ -16,10 +16,11 @@ router.post(
 );
 
 router.get("/", auth(), StartupController.getMyStartups);
+router.get("/dashboard/stats", auth(), StartupController.getDashboardStats);
 router.patch("/:id/favorite", auth(), StartupController.toggleFavorite);
+router.get("/:id/export", auth(), StartupController.exportStartup);
 
 router.delete("/:id", auth(), StartupController.softDeleteStartup);
-
 router.get("/:slug", auth(), StartupController.getStartupBySlug);
 
 export const StartupRoutes = router;

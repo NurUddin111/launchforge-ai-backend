@@ -17,7 +17,7 @@ const generateStartup = catchAsync(async (req, res) => {
 });
 
 const getMyStartups = catchAsync(async (req, res) => {
-  const result = await StartupService.getMyStartups(req.user.userId);
+  const result = await StartupService.getMyStartups(req.user.userId, req.query);
 
   sendResponse(res, {
     success: true,
@@ -59,10 +59,33 @@ const softDeleteStartup = catchAsync(async (req, res) => {
   });
 });
 
+const exportStartup = catchAsync(async (req, res) => {
+  const result = await StartupService.exportStartup(req.params.id as string, req.user.userId);
+
+  res.setHeader("Content-Type", "text/markdown");
+
+  res.setHeader("Content-Disposition", `attachment; filename="${result.filename}"`);
+
+  res.send(result.markdown);
+});
+
+const getDashboardStats = catchAsync(async (req, res) => {
+  const result = await StartupService.getDashboardStats(req.user.userId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Dashboard stats retrieved successfully",
+    data: result,
+  });
+});
+
 export const StartupController = {
   generateStartup,
   getMyStartups,
   getStartupBySlug,
   toggleFavorite,
   softDeleteStartup,
+  exportStartup,
+  getDashboardStats,
 };
