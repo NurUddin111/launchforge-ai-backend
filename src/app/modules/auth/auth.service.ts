@@ -24,7 +24,8 @@ const registerUser = async (payload: TRegisterUser) => {
 
   const user = await prisma.user.create({
     data: {
-      ...payload,
+      name: payload.name,
+      email: payload.email,
       password: hashedPassword,
     },
     select: {
@@ -106,5 +107,5 @@ const getMe = async (userId: string) => {
 export const AuthService = {
   registerUser,
   loginUser,
-  getMe
+  getMe,
 };
